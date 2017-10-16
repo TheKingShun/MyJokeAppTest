@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,19 +42,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    public static final int FLAG_FIRST_IN = 0;
-    public static final int FLAG_IN = 1;
+    private static final String BASE_URL = "http://japi.juhe.cn";
+    private static final String PARAMS_KEY = "61454b30735d4c1d36cb6be6a2912562";
+    public static final String ARG_KEY = "123";
+    public static final String ARG_VALUE = "value";
     private RecyclerView mRecyclerView;
     private TextView mErrorTips;
     private SwipeRefreshLayout mRefresh;
-    public static final String BASE_URL = "http://japi.juhe.cn";
-    public static final int PAGE_SIZE_DEFAULT = 8;
-    public static final int PAGE_SIZE_MAX = 20;
-    public static final String PARAMS_KEY = "61454b30735d4c1d36cb6be6a2912562";
-    public static final int MESSAGE_ERROR_TIPS_INVISIBLE = 0;
-    public static final int ERROR_TIPS_DELAY_MILLIS = 2500;
     private int page = 1;
     private int pagesize = PAGE_SIZE_DEFAULT;
+    public static final int PAGE_SIZE_DEFAULT = 3;
+    public static final int PAGE_SIZE_MAX = 20;
+    public static final int MESSAGE_ERROR_TIPS_INVISIBLE = 0;
+    public static final int ERROR_TIPS_DELAY_MILLIS = 2500;
     private static final String TAG = "FragmentJoke";
     private List<String> mDatas = new ArrayList<>();
     private MyAdapter adapter;
@@ -71,7 +70,7 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public static FragmentJoke newInstance() {
         Bundle args = new Bundle();
-        args.putString("123", "123");
+        args.putString(ARG_KEY, ARG_VALUE);
         FragmentJoke fragmentJoke = new FragmentJoke();
         fragmentJoke.setArguments(args);
         return fragmentJoke;
@@ -81,27 +80,13 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("FragmentJoke", "onCreate: ");
-        initDatas();
+
+        //请求一次数据集
+        initDataSource();
 
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_joke, null, false);
-        mErrorTips = (TextView) view.findViewById(R.id.tv_error_tips);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_joke);
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        initViews();
-        return view;
-    }
-
-
-    /**
-     * 请求数据并更新在视图界面上
-     */
-    private void initDatas() {
-
+    private void initDataSource() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 //Gson解析
@@ -128,23 +113,36 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
                 //将数据与rv连接
                 Collections.reverse(mDatas);
-                Log.d(TAG, "onResponse: 全部的数据--------》" + mDatas.size());
-                swapDatas();
-                mRefresh.setRefreshing(false);
-
+                swapDatas(mDatas);
+                cancelRefresh();
             }
-
             @Override
             public void onFailure(Call<JokeBean> call, Throwable t) {
-                sendErrorTips();
+                showErrorTips();
             }
         });
+
     }
 
-    private void swapDatas() {
+    private void cancelRefresh() {
+        mRefresh.setRefreshing(false);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_joke, null, false);
+        mErrorTips = (TextView) view.findViewById(R.id.tv_error_tips);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_joke);
+        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        initViews();
+        return view;
+    }
+
+    private void swapDatas(List<String> datas) {
 
         //设置数据
-        adapter = new MyAdapter(mDatas);
+        adapter = new MyAdapter(datas);
         adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -167,27 +165,45 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        swapDatas();
+        swapDatas(mDatas);
 
     }
 
     /**
      * 该方法用于发送错误消息
      */
-    private void sendErrorTips() {
+    private void showErrorTips() {
         //先让tips可见
         mErrorTips.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.error_tip_anim);
         mErrorTips.setAnimation(animation);
-        mRefresh.setRefreshing(false);
+        cancelRefresh();
         //1.5秒后将tiips隐藏
         mHandler.sendEmptyMessageDelayed(MESSAGE_ERROR_TIPS_INVISIBLE, ERROR_TIPS_DELAY_MILLIS);
     }
 
     @Override
     public void onRefresh() {
-        //读取下一页数据
         page++;
-        initDatas();
+        initDataSource();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("FragmentJoke", "onDestroy: ");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("FragmentJoke", "onPause: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("FragmentJoke", "onPause: ");
     }
 }

@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -24,10 +26,10 @@
         <!--top_tips-->
         <TextView
             android:id="@+id/tv_error_tips"
-            android:elevation="@dimen/elevation_utils"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_red_light"
+            android:elevation="@dimen/elevation_utils"
             android:fontFamily="monospace"
             android:gravity="center_horizontal|center_vertical"
             android:padding="10dp"

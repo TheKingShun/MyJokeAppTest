@@ -21,6 +21,7 @@ public class FragmentComment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private String mPage;
 
+
     public static FragmentComment newInstance(String page) {
         Bundle args = new Bundle();
         args.putString(ARG_PAGE, page);
