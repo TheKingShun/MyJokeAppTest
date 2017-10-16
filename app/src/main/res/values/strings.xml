@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyJokeApp</string>
+    <string name="error_tips">请求数据失败!</string>
+</resources>
