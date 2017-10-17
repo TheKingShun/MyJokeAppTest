@@ -1,11 +1,9 @@
-package com.luobotie.myjokeapp;
+package com.luobotie.myjokeapp.net.joke;
 
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**

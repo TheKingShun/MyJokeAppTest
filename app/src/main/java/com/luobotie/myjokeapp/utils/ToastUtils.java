@@ -1,4 +1,4 @@
-package com.luobotie.myjokeapp;
+package com.luobotie.myjokeapp.utils;
 
 import android.content.Context;
 import android.view.Gravity;

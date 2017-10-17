@@ -1,5 +1,6 @@
 package com.luobotie.myjokeapp;
 
+import android.graphics.ImageFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,13 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.FrameLayout;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.luobotie.myjokeapp.fragments.FragmentComment;
 import com.luobotie.myjokeapp.fragments.FragmentHome;
-import com.luobotie.myjokeapp.fragments.FragmentJoke;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
@@ -33,15 +32,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     private void initView() {
         mNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_bar);
-        initFragment();
+
+
+            initFragment();
+
         //初始化底部栏
         initNavigationBar();
         //开始事务
         ft = fm.beginTransaction();
-        ft.replace(R.id.container,FragmentHome.newInstance(0)).commit();
+        ft.add(R.id.container, fragment1)
+                .add(R.id.container, fragment2)
+                .add(R.id.container, fragment3)
+                .add(R.id.container, fragment4)
+                .add(R.id.container, fragment5).commit();
+        //第一个加载
+        ft = fm.beginTransaction();
+        showFragmentHome(ft);
 
 
     }
+
 
     private void initFragment() {
         fragment1 = FragmentHome.newInstance(0);
@@ -54,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     private void initNavigationBar() {
         mNavigationBar.setAutoHideEnabled(true);
         mNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
-        mNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
+        mNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_DEFAULT);
         //页面点击切换监听
         mNavigationBar.setTabSelectedListener(this);
         mNavigationBar.addItem(new BottomNavigationItem(android.R.drawable.ic_menu_manage, "首页").setActiveColorResource(R.color.colorPrimary))
@@ -74,28 +84,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         switch (position) {
             case 0:
                 ft = fm.beginTransaction();
-                ft.replace(R.id.container, FragmentHome.newInstance(0)).commit();
+                showFragmentHome(ft);
                 break;
             case 1:
                 Log.d("MainActivity", "ft.replace: " + position + "\n");
                 ft = fm.beginTransaction();
-                ft.replace(R.id.container, FragmentComment.newInstance("1")).commit();
+                showFragmentIdea(ft);
                 break;
             case 2:
                 ft = fm.beginTransaction();
-                ft.replace(R.id.container, FragmentComment.newInstance("2")).commit();
+                showFragmentMarket(ft);
                 break;
             case 3:
                 ft = fm.beginTransaction();
-                ft.replace(R.id.container, FragmentComment.newInstance("3")).commit();
+                showFragmentNotification(ft);
                 break;
             case 4:
                 ft = fm.beginTransaction();
-                ft.replace(R.id.container, FragmentComment.newInstance("4")).commit();
+                showFragmentMore(ft);
                 break;
 
         }
     }
+
 
     @Override
     public void onTabUnselected(int position) {
@@ -108,4 +119,52 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         Log.d("MainActivity", "onTabReselected: ");
 
     }
+
+
+    private void showFragmentMore(FragmentTransaction transaction) {
+        transaction.show(fragment5)
+                .hide(fragment1)
+                .hide(fragment2)
+                .hide(fragment3)
+                .hide(fragment4)
+                .commit();
+    }
+
+    private void showFragmentNotification(FragmentTransaction transaction) {
+        transaction.show(fragment4)
+                .hide(fragment1)
+                .hide(fragment2)
+                .hide(fragment3)
+                .hide(fragment5)
+                .commit();
+    }
+
+    private void showFragmentMarket(FragmentTransaction transaction) {
+        transaction.show(fragment3)
+                .hide(fragment1)
+                .hide(fragment2)
+                .hide(fragment4)
+                .hide(fragment5)
+                .commit();
+    }
+
+    private void showFragmentIdea(FragmentTransaction transaction) {
+        transaction.show(fragment2)
+                .hide(fragment1)
+                .hide(fragment3)
+                .hide(fragment4)
+                .hide(fragment5)
+                .commit();
+    }
+
+
+    private void showFragmentHome(FragmentTransaction transaction) {
+        transaction.show(fragment1)
+                .hide(fragment2)
+                .hide(fragment3)
+                .hide(fragment4)
+                .hide(fragment5)
+                .commit();
+    }
+
 }

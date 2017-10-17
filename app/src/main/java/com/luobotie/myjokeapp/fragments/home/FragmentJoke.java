@@ -1,4 +1,4 @@
-package com.luobotie.myjokeapp.fragments;
+package com.luobotie.myjokeapp.fragments.home;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,11 +16,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.luobotie.myjokeapp.GetRequest;
-import com.luobotie.myjokeapp.JokeBean;
-import com.luobotie.myjokeapp.MyAdapter;
+import com.luobotie.myjokeapp.net.joke.GetRequest;
+import com.luobotie.myjokeapp.net.joke.JokeBean;
+import com.luobotie.myjokeapp.adapter.MyAdapter;
 import com.luobotie.myjokeapp.R;
-import com.luobotie.myjokeapp.ToastUtils;
+import com.luobotie.myjokeapp.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,6 +113,7 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
                 //将数据与rv连接
                 Collections.reverse(mDatas);
+                //更新数据
                 swapDatas(mDatas);
                 cancelRefresh();
             }
@@ -139,17 +140,14 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
         return view;
     }
 
+    /**
+     * @param datas 交换的新数据
+     */
     private void swapDatas(List<String> datas) {
+        adapter.swapData(datas);
+        //通知数据己覆盖
+        adapter.notifyDataSetChanged();
 
-        //设置数据
-        adapter = new MyAdapter(datas);
-        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                ToastUtils.setShortToast(getContext(), String.valueOf(position));
-            }
-        });
-        mRecyclerView.setAdapter(adapter);
     }
 
 
@@ -165,7 +163,15 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        swapDatas(mDatas);
+        //设置数据
+        adapter = new MyAdapter(mDatas);
+        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                ToastUtils.setShortToast(getContext(), String.valueOf(position));
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
 
     }
 

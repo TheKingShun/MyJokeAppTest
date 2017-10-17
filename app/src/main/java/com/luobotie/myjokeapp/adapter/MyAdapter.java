@@ -1,15 +1,14 @@
-package com.luobotie.myjokeapp;
+package com.luobotie.myjokeapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.security.Policy;
+import com.luobotie.myjokeapp.R;
+
 import java.util.List;
 
 /**
@@ -50,7 +49,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if (this.datas!=datas){
             this.datas = datas;
             Log.d(TAG, "swapData: 数据已经发生改变"+datas.size());
-           this.notifyDataSetChanged();
         }
     }
 

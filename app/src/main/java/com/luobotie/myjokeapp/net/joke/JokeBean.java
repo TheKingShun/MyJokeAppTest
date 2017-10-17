@@ -1,4 +1,4 @@
-package com.luobotie.myjokeapp;
+package com.luobotie.myjokeapp.net.joke;
 
 import java.util.List;
 
