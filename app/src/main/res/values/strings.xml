@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">MyJokeApp</string>
     <string name="error_tips">请求数据失败!</string>
+    <string name="tv_news_title">这里是标题</string>
+    <string name="tv_news_date">这里是时间</string>
 </resources>

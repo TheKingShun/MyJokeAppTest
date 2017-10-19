@@ -12,7 +12,7 @@ import retrofit2.http.QueryMap;
  * 努力 加油 我是最棒的！2017
  */
 
-public interface GetRequest {
+public interface GetJokeRequest {
     @GET("/joke/content/text.from?")
     Call<JokeBean> getJoke(@QueryMap Map<String,String> params);
 }

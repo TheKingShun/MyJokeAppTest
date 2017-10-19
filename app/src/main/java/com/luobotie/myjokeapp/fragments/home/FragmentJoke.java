@@ -16,9 +16,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.luobotie.myjokeapp.net.joke.GetRequest;
+import com.luobotie.myjokeapp.adapter.MyJokeAdapter;
+import com.luobotie.myjokeapp.net.joke.GetJokeRequest;
 import com.luobotie.myjokeapp.net.joke.JokeBean;
-import com.luobotie.myjokeapp.adapter.MyAdapter;
 import com.luobotie.myjokeapp.R;
 import com.luobotie.myjokeapp.utils.ToastUtils;
 
@@ -46,18 +46,21 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
     private static final String PARAMS_KEY = "61454b30735d4c1d36cb6be6a2912562";
     public static final String ARG_KEY = "123";
     public static final String ARG_VALUE = "value";
+    public static final String PARAMS_KEY_PAGE = "page";
+    public static final String PARAMS_KEY_PAGESIZE = "pagesize";
+    public static final String PARAMS_KEY_KEY = "key";
     private RecyclerView mRecyclerView;
     private TextView mErrorTips;
     private SwipeRefreshLayout mRefresh;
     private int page = 1;
     private int pagesize = PAGE_SIZE_DEFAULT;
-    public static final int PAGE_SIZE_DEFAULT = 3;
+    public static final int PAGE_SIZE_DEFAULT = 10;
     public static final int PAGE_SIZE_MAX = 20;
     public static final int MESSAGE_ERROR_TIPS_INVISIBLE = 0;
     public static final int ERROR_TIPS_DELAY_MILLIS = 2500;
     private static final String TAG = "FragmentJoke";
     private List<String> mDatas = new ArrayList<>();
-    private MyAdapter adapter;
+    private MyJokeAdapter adapter;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -92,16 +95,14 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
                 //Gson解析
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        GetRequest getRequest = retrofit.create(GetRequest.class);
-
+        GetJokeRequest getJokeRequest = retrofit.create(GetJokeRequest.class);
         //访问参数 用map形式表示
         Map<String, String> params = new TreeMap<>();
-        params.put("page", String.valueOf(page));
-        params.put("pagesize", String.valueOf(pagesize));
-        params.put("key", PARAMS_KEY);
-
+        params.put(PARAMS_KEY_PAGE, String.valueOf(page));
+        params.put(PARAMS_KEY_PAGESIZE, String.valueOf(pagesize));
+        params.put(PARAMS_KEY_KEY, PARAMS_KEY);
         //call方法 返回结果
-        Call<JokeBean> call = getRequest.getJoke(params);
+        Call<JokeBean> call = getJokeRequest.getJoke(params);
         call.enqueue(new Callback<JokeBean>() {
             @Override
             public void onResponse(Call<JokeBean> call, Response<JokeBean> response) {
@@ -164,8 +165,8 @@ public class FragmentJoke extends Fragment implements SwipeRefreshLayout.OnRefre
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //设置数据
-        adapter = new MyAdapter(mDatas);
-        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+        adapter = new MyJokeAdapter(mDatas);
+        adapter.setOnItemClickListener(new MyJokeAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 ToastUtils.setShortToast(getContext(), String.valueOf(position));

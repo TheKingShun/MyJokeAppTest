@@ -2,4 +2,9 @@
 <resources>
     <dimen name="error_tips_text_size">14sp</dimen>
     <dimen name="elevation_utils">5dp</dimen>
+    <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="textsize_news_title">15sp</dimen>
+    <dimen name="textsize_news_date">12sp</dimen>
+    <dimen name="padding_3dp">3dp</dimen>
+    <dimen name="margin_5dp">5dp</dimen>
 </resources>

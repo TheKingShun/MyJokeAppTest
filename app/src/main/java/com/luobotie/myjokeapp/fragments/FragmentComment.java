@@ -3,6 +3,7 @@ package com.luobotie.myjokeapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,13 @@ import com.luobotie.myjokeapp.R;
 public class FragmentComment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
+    public static final String TAG = "FragmentComment";
     private String mPage;
 
 
-    public static FragmentComment newInstance(String page) {
+    public static FragmentComment newInstance() {
         Bundle args = new Bundle();
-        args.putString(ARG_PAGE, page);
+        args.putString(ARG_PAGE, "0");
         FragmentComment fragmentComment = new FragmentComment();
         fragmentComment.setArguments(args);
         return fragmentComment;
@@ -48,5 +50,11 @@ public class FragmentComment extends Fragment {
         textView.setText("Fragment"+mPage);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: ");
+        super.onDestroyView();
     }
 }

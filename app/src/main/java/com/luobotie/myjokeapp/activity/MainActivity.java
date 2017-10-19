@@ -1,4 +1,4 @@
-package com.luobotie.myjokeapp;
+package com.luobotie.myjokeapp.activity;
 
 import android.graphics.ImageFormat;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.luobotie.myjokeapp.R;
 import com.luobotie.myjokeapp.fragments.FragmentComment;
 import com.luobotie.myjokeapp.fragments.FragmentHome;
 
@@ -18,6 +19,7 @@ import com.luobotie.myjokeapp.fragments.FragmentHome;
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
 
     private BottomNavigationBar mNavigationBar;
+    private static final String TAG = "MainActivity";
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft;
     private Fragment fragment1, fragment2, fragment3, fragment4, fragment5;
@@ -27,38 +29,44 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
+        initView(savedInstanceState);
     }
 
-    private void initView() {
+    private void initView(Bundle savedInstanceState) {
         mNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_bar);
-
-
-            initFragment();
-
         //初始化底部栏
         initNavigationBar();
-        //开始事务
-        ft = fm.beginTransaction();
-        ft.add(R.id.container, fragment1)
-                .add(R.id.container, fragment2)
-                .add(R.id.container, fragment3)
-                .add(R.id.container, fragment4)
-                .add(R.id.container, fragment5).commit();
-        //第一个加载
-        ft = fm.beginTransaction();
-        showFragmentHome(ft);
+        //用于避免fragment的重叠现象的发生
+        if (savedInstanceState == null) {
+            Log.d(TAG, "initView: 初始化fragments");
+            initFragment();
+            //开始事务 添加如下的fragments
+            ft = fm.beginTransaction();
+            ft.add(R.id.container, fragment1)
+                    .add(R.id.container, fragment2)
+                    .add(R.id.container, fragment3)
+                    .add(R.id.container, fragment4)
+                    .add(R.id.container, fragment5);
+            showFragmentHome(ft);
+        } else {
 
+            Log.d(TAG, "initView: 避免重叠从而加载旧fragments");
 
+            //显示第一个需要显示的fragment
+            ft = fm.beginTransaction();
+            //第一个加载
+            ft = fm.beginTransaction();
+            showFragmentHome(ft);
+        }
     }
 
 
     private void initFragment() {
         fragment1 = FragmentHome.newInstance(0);
-        fragment2 = FragmentComment.newInstance("1");
-        fragment3 = FragmentComment.newInstance("2");
-        fragment4 = FragmentComment.newInstance("3");
-        fragment5 = FragmentComment.newInstance("4");
+        fragment2 = FragmentComment.newInstance();
+        fragment3 = FragmentComment.newInstance();
+        fragment4 = FragmentComment.newInstance();
+        fragment5 = FragmentComment.newInstance();
     }
 
     private void initNavigationBar() {

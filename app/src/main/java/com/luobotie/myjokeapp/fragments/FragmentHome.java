@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.luobotie.myjokeapp.R;
 import com.luobotie.myjokeapp.fragments.home.FragmentJoke;
+import com.luobotie.myjokeapp.fragments.home.FragmentNews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,9 @@ public class FragmentHome extends Fragment {
         tabIndicators.add("话题");
         //导航栏 具体内容fragment
         tabFragments = new ArrayList<>();
-        tabFragments.add(FragmentComment.newInstance("1"));
-        tabFragments.add(FragmentComment.newInstance("2"));
-        tabFragments.add(FragmentComment.newInstance("3"));
+        tabFragments.add(FragmentJoke.newInstance());
+        tabFragments.add(FragmentNews.newInstance());
+        tabFragments.add(FragmentComment.newInstance());
         //适配器
         contentAdapter = new ContentPageAdapter(getChildFragmentManager());
         //给viewPager设置适配器
@@ -104,6 +105,7 @@ public class FragmentHome extends Fragment {
         public Fragment getItem(int position) {
             return tabFragments.get(position);
         }
+
 
         @Override
         public int getCount() {

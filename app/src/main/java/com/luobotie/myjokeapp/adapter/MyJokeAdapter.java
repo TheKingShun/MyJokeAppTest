@@ -17,25 +17,25 @@ import java.util.List;
  * 努力 加油 我是最棒的！2017
  */
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyJokeAdapter extends RecyclerView.Adapter<MyJokeAdapter.MyJokeViewHolder> {
 
-    public static final String TAG = "MyAdapter";
+    public static final String TAG = "MyJokeAdapter";
     private List<String> datas;
 
-    public MyAdapter(List<String> datas) {
+    public MyJokeAdapter(List<String> datas) {
         this.datas = datas;
     }
 
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder holder = new MyViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_item, null, false));
+    public MyJokeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        MyJokeViewHolder holder = new MyJokeViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.joke_item, null, false));
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyJokeViewHolder holder, int position) {
         holder.tvContent.setText(datas.get(position));
 
     }
@@ -52,11 +52,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyJokeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvContent;
 
-        public MyViewHolder(View itemView) {
+        public MyJokeViewHolder(View itemView) {
             super(itemView);
             tvContent = (TextView) itemView.findViewById(R.id.tv_joke_content);
             tvContent.setOnClickListener(this);
@@ -64,7 +64,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onClick(getPosition());
+            onItemClickListener.onClick(getAdapterPosition());
         }
     }
 
