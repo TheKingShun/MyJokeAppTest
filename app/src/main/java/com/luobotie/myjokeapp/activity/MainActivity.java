@@ -47,16 +47,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     .add(R.id.container, fragment3)
                     .add(R.id.container, fragment4)
                     .add(R.id.container, fragment5);
-            showFragmentHome(ft);
+            hideAllFragments(ft);
+            ft.show(fragment1).commit();
         } else {
-
             Log.d(TAG, "initView: 避免重叠从而加载旧fragments");
-
-            //显示第一个需要显示的fragment
-            ft = fm.beginTransaction();
             //第一个加载
             ft = fm.beginTransaction();
-            showFragmentHome(ft);
+            hideAllFragments(ft);
+            ft.show(fragment1).commit();
         }
     }
 
@@ -70,11 +68,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
     private void initNavigationBar() {
-        mNavigationBar.setAutoHideEnabled(true);
+
         mNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
         mNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_DEFAULT);
         //页面点击切换监听
         mNavigationBar.setTabSelectedListener(this);
+        mNavigationBar.setAutoHideEnabled(true);
         mNavigationBar.addItem(new BottomNavigationItem(android.R.drawable.ic_menu_manage, "首页").setActiveColorResource(R.color.colorPrimary))
                 .addItem(new BottomNavigationItem(android.R.drawable.ic_menu_manage, "想法").setActiveColorResource(R.color.colorPrimary))
                 .addItem(new BottomNavigationItem(android.R.drawable.ic_menu_manage, "市场").setActiveColorResource(R.color.colorPrimary))
@@ -92,24 +91,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         switch (position) {
             case 0:
                 ft = fm.beginTransaction();
-                showFragmentHome(ft);
+                hideAllFragments(ft);
+                ft.show(fragment1).commit();
                 break;
             case 1:
                 Log.d("MainActivity", "ft.replace: " + position + "\n");
                 ft = fm.beginTransaction();
-                showFragmentIdea(ft);
+                hideAllFragments(ft);
+                ft.show(fragment2).commit();
                 break;
             case 2:
                 ft = fm.beginTransaction();
-                showFragmentMarket(ft);
+                hideAllFragments(ft);
+                ft.show(fragment3).commit();
                 break;
             case 3:
                 ft = fm.beginTransaction();
-                showFragmentNotification(ft);
+                hideAllFragments(ft);
+                ft.show(fragment4).commit();
                 break;
             case 4:
                 ft = fm.beginTransaction();
-                showFragmentMore(ft);
+                hideAllFragments(ft);
+                ft.show(fragment5).commit();
                 break;
 
         }
@@ -128,51 +132,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     }
 
-
-    private void showFragmentMore(FragmentTransaction transaction) {
-        transaction.show(fragment5)
-                .hide(fragment1)
+    private void hideAllFragments(FragmentTransaction transaction) {
+        transaction.hide(fragment1)
                 .hide(fragment2)
                 .hide(fragment3)
                 .hide(fragment4)
-                .commit();
-    }
-
-    private void showFragmentNotification(FragmentTransaction transaction) {
-        transaction.show(fragment4)
-                .hide(fragment1)
-                .hide(fragment2)
-                .hide(fragment3)
-                .hide(fragment5)
-                .commit();
-    }
-
-    private void showFragmentMarket(FragmentTransaction transaction) {
-        transaction.show(fragment3)
-                .hide(fragment1)
-                .hide(fragment2)
-                .hide(fragment4)
-                .hide(fragment5)
-                .commit();
-    }
-
-    private void showFragmentIdea(FragmentTransaction transaction) {
-        transaction.show(fragment2)
-                .hide(fragment1)
-                .hide(fragment3)
-                .hide(fragment4)
-                .hide(fragment5)
-                .commit();
-    }
-
-
-    private void showFragmentHome(FragmentTransaction transaction) {
-        transaction.show(fragment1)
-                .hide(fragment2)
-                .hide(fragment3)
-                .hide(fragment4)
-                .hide(fragment5)
-                .commit();
+                .hide(fragment5);
     }
 
 }
